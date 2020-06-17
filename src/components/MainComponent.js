@@ -21,7 +21,7 @@ class Main extends Component {
     }
 
     render() {
-        {
+        
             return (
                 <div>
                     <Navbar dark color="primary" >
@@ -35,7 +35,7 @@ class Main extends Component {
 
 
             );
-        }
+        
     };
 }
 
