@@ -1,5 +1,9 @@
-import React from 'react';
-import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import React, { Component } from 'react';
+import {
+    Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem, Button,
+    Modal, ModalBody, ModalHeader, Label, Row, Col
+} from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
 function RenderComments({ comments }) {
@@ -23,6 +27,7 @@ function RenderComments({ comments }) {
                         );
                     })}
                 </p>
+                <CommentForm />
             </div>
         );
     }
@@ -46,9 +51,93 @@ function RenderDish({ dish }) {
     else return (<div></div>);
 }
 
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => val && (val.length >= len);
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.toggleComment = this.toggleComment.bind(this);
+        this.submitComment = this.submitComment.bind(this);
+
+        this.state = {
+            isModalOpen: false,
+        };
+    }
+
+    toggleComment() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        });
+    }
+    submitComment(values) {
+        this.toggleComment();
+        alert("Current state is " + JSON.stringify(values));
+
+    }
+    render() {
+        return (
+            <div className="container">
+                <Button outline onClick={this.toggleComment} >
+                    <span className="fa fa-pencil fa-lg"></span> Submit Comment
+                </Button>
+
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleComment}>
+                    <ModalHeader toggle={this.toggleComment}>
+                        Submit Comment
+                    </ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => { this.submitComment(values) }}>
+                            <div className="container">
+                                <Row className="form-group">
+                                    <Label htmlFor="rating">Rating</Label>
+                                    <Control.select model=".rating" name="rating" id="rating"
+                                        className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                                </Row>
+                                <Row className="form-group">
+                                    <Label htmlFor="yourname">Your Name</Label>
+                                    <Control.text model=".yourname" name="yourname" id="yourname"
+                                        className="form-control" validators={{
+                                            minLength: minLength(3),
+                                            maxLength: maxLength(15)
+                                        }} />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".yourname"
+                                        show="touched"
+                                        messages={
+                                            {
+                                                minLength: "Minimum length should be 3",
+                                                maxLength: "Maximum length should be 15"
+                                            }
+                                        }
+                                    />
+
+                                </Row>
+                                <Row className="form-group">
+                                    <Label htmlFor="comment">Comment</Label>
+                                    <Control.textarea model=".comment" name="comment" id="comment"
+                                        className="form-control" />
+
+                                </Row>
+                                <Button type="submit" value="submit" color="primary">Login</Button>
+                            </div>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
+
 const DishDetail = (props) => {
-    
-    
+
+
     return (
         <div className="container">
             <div className="row">
@@ -61,16 +150,12 @@ const DishDetail = (props) => {
                     <hr />
                 </div>
             </div>
-            
-            <div className="row">                
+
+            <div className="row">
                 <RenderDish dish={props.dish} />
                 <RenderComments comments={props.comments} />
             </div>
         </div>
     );
 }
-
-
-
-
 export default DishDetail;
