@@ -57,5 +57,4 @@ class Main extends Component {
 
     };
 }
-
 export default withRouter(connect(mapStateToProps)(Main));
