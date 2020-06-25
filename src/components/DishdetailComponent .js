@@ -6,7 +6,7 @@ import {
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
         return (
             <div className="col-md-5 col-12 m-1">
@@ -27,7 +27,7 @@ function RenderComments({ comments }) {
                         );
                     })}
                 </p>
-                <CommentForm />
+                <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
     }
@@ -71,7 +71,7 @@ class CommentForm extends Component {
     }
     submitComment(values) {
         this.toggleComment();
-        alert("Current state is " + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
 
     }
     render() {
@@ -100,15 +100,15 @@ class CommentForm extends Component {
                                     </Control.select>
                                 </Row>
                                 <Row className="form-group">
-                                    <Label htmlFor="yourname">Your Name</Label>
-                                    <Control.text model=".yourname" name="yourname" id="yourname"
+                                    <Label htmlFor="author">Your Name</Label>
+                                    <Control.text model=".author" name="author" id="author"
                                         className="form-control" validators={{
                                             minLength: minLength(3),
                                             maxLength: maxLength(15)
                                         }} />
                                     <Errors
                                         className="text-danger"
-                                        model=".yourname"
+                                        model=".author"
                                         show="touched"
                                         messages={
                                             {
@@ -153,7 +153,10 @@ const DishDetail = (props) => {
 
             <div className="row">
                 <RenderDish dish={props.dish} />
-                <RenderComments comments={props.comments} />
+                <RenderComments comments={props.comments}
+                    addComment={props.addComment}
+                    dishId={props.dish.id}
+                />
             </div>
         </div>
     );
