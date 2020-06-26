@@ -3,7 +3,7 @@ import {
     Breadcrumb, BreadcrumbItem,
     Button, Row, Col, Label
 } from 'reactstrap';
-import { Control, Form, Errors,actions } from 'react-redux-form';
+import { Control, Form, Errors, actions } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
 const required = (val) => val && val.length;
@@ -19,9 +19,12 @@ class Contact extends Component {
 
     }
     handleSubmit(values) {
-        console.log("Current state is " + JSON.stringify(values));
-        alert("Current state is " + JSON.stringify(values));
+
         this.props.resetFeedbackForm();
+        this.props.postFeedback(values.firstname,
+            values.lastname, values.telnum, values.email,
+            values.agree, values.contactType, values.message);
+
 
     }
     render() {
