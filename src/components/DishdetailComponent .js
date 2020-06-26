@@ -7,7 +7,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
     if (comments != null) {
         return (
             <div className="col-md-5 col-12 m-1">
@@ -28,7 +28,7 @@ function RenderComments({ comments, addComment, dishId }) {
                         );
                     })}
                 </p>
-                <CommentForm dishId={dishId} addComment={addComment} />
+                <CommentForm dishId={dishId} postComment={postComment} />
             </div>
         );
     }
@@ -72,7 +72,7 @@ class CommentForm extends Component {
     }
     submitComment(values) {
         this.toggleComment();
-        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
 
     }
     render() {
@@ -126,7 +126,7 @@ class CommentForm extends Component {
                                         className="form-control" />
 
                                 </Row>
-                                <Button type="submit" value="submit" color="primary">Login</Button>
+                                <Button type="submit" value="submit" color="primary">Add Comment</Button>
                             </div>
                         </LocalForm>
                     </ModalBody>
@@ -172,7 +172,7 @@ const DishDetail = (props) => {
                 <div className="row">
                     <RenderDish dish={props.dish} />
                     <RenderComments comments={props.comments}
-                        addComment={props.addComment}
+                        postComment={props.postComment}
                         dishId={props.dish.id}
                     />
                 </div>
